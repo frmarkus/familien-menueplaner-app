@@ -1,7 +1,7 @@
 const PREFIX = "fm-shell:" + self.registration.scope + ":";
-const CACHE = PREFIX + "93513ebbfe3d";
+const CACHE = PREFIX + "764b028318a1";
 const DEV_PATH = new URL("dev/", self.registration.scope).pathname;
-const PRECACHE = ["./","./assets/index-CPD6zLmu.css","./assets/index-DkeTLbdN.js","./icons/icon-192.png","./icons/icon-512.png","./icons/icon-maskable-512.png","./manifest.webmanifest"];
+const PRECACHE = ["./","./assets/index-CCLPRxrl.js","./assets/index-CPD6zLmu.css","./icons/icon-192.png","./icons/icon-512.png","./icons/icon-maskable-512.png","./manifest.webmanifest"];
 const INDEX = PRECACHE[0];
 
 self.addEventListener("install", (event) => {
@@ -32,5 +32,7 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(fetch(request).catch(() => caches.match(INDEX)));
     return;
   }
-  event.respondWith(caches.match(request).then((hit) => hit || fetch(request)));
+  // ignoreVary: Der Server sendet "Vary: Origin". Die Vorab-Anfrage von addAll trägt keinen Origin-Header,
+  // die Modul- und CSS-Anfragen der Seite (CORS-Modus) schon. Ohne ignoreVary träfe caches.match nie.
+  event.respondWith(caches.match(request, { ignoreVary: true }).then((hit) => hit || fetch(request)));
 });
