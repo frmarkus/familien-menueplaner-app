@@ -1,7 +1,7 @@
 const PREFIX = "fm-shell:" + self.registration.scope + ":";
-const CACHE = PREFIX + "d5b768d71dc8";
+const CACHE = PREFIX + "704716180b7d";
 const DEV_PATH = new URL("dev/", self.registration.scope).pathname;
-const PRECACHE = ["./","./assets/index-DzoibXms.css","./assets/index-OJEPzD1R.js","./icons/icon-192.png","./icons/icon-512.png","./icons/icon-maskable-512.png","./manifest.webmanifest"];
+const PRECACHE = ["./","./assets/index-BeTWHhfp.js","./assets/index-DzoibXms.css","./icons/icon-192.png","./icons/icon-512.png","./icons/icon-maskable-512.png","./manifest.webmanifest"];
 const INDEX = PRECACHE[0];
 
 self.addEventListener("install", (event) => {
