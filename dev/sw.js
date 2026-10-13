@@ -22,6 +22,36 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+self.addEventListener("push", (event) => {
+  const message = event.data ? event.data.json().data : undefined;
+  if (!message) return;
+  event.waitUntil(
+    self.registration.showNotification(message.title, {
+      body: message.body,
+      tag: message.tag,
+      renotify: true,
+      icon: new URL("icons/icon-192.png", self.registration.scope).href,
+      data: { target: message.target },
+    }),
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = new URL("#" + event.notification.data.target, self.registration.scope).href;
+  const inScope = (client) => {
+    const path = new URL(client.url).pathname;
+    return path.startsWith(new URL(self.registration.scope).pathname) && !path.startsWith(DEV_PATH);
+  };
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((windows) => {
+      const open = windows.find(inScope);
+      if (!open) return self.clients.openWindow(url);
+      return open.navigate(url).then(() => open.focus());
+    }),
+  );
+});
+
 self.addEventListener("fetch", (event) => {
   const request = event.request;
   if (request.method !== "GET") return;
